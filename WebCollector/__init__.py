@@ -2,7 +2,7 @@ import requests
 from datetime import datetime
 from bs4 import BeautifulSoup, element
 
-import urls
+from . import urls
 
 
 class WebCollector:
@@ -64,7 +64,7 @@ class WebCollector:
 
             subpage += 1
 
-    def all(self) -> dict:
+    def all(self) -> set[str]:
         self._jbzd()
 
         return self._media_urls
