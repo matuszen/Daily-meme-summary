@@ -5,8 +5,10 @@ from WebCollector import WebCollector
 from DiscordHandler import DiscordHandler
 from MediaDownloader import MediaDownloader
 
+log.basicConfig(level=log.INFO, format='[%(levelname)s] %(name)s: %(message)s')
 
-def main() -> None:
+
+async def main() -> None:
     # urls = WebCollector().all()
 
     # print(urls)
@@ -14,12 +16,11 @@ def main() -> None:
     # MediaDownloader(urls).download()
 
     discord = DiscordHandler()
-    asyncio.run(discord.connect())
-
+    await discord.run()
 
 if __name__ == "__main__":
     try:
-        main()
+        asyncio.run(main())
 
     except KeyboardInterrupt:
         log.error("Keyboard Interrupt")
