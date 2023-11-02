@@ -13,6 +13,9 @@ class DiscordHandler:
 
             self.channel = self.client.get_channel(CHANNEL_ID)
 
+            if self.channel is None:
+                log.error("Channel object is None")
+
         except discord.LoginFailure as e:
             log.error(f"Login failed: {e}")
 

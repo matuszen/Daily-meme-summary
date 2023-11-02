@@ -153,3 +153,4 @@ cython_debug/
 
 # Restricted bot files
 dc_token.py
+tel_token.py
