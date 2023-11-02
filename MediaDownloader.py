@@ -1,6 +1,7 @@
 import os
 import requests
 from datetime import datetime
+import logging as log
 
 
 class MediaDownloader:
@@ -11,18 +12,34 @@ class MediaDownloader:
         if not os.path.exists("cache"):
             os.makedirs("cache")
 
+        if os.listdir("cache") is not None:
+            self.clear_cache()
+
         for index, url in enumerate(self._urls, 1):
             response = requests.get(url)
 
             if response.status_code == 200:
                 file_extension = url.split(".")[-1]
-                today_date = datetime.now().strftime("%Y-%m-%d")
+                today_date = datetime.now().strftime("%d-%m-%Y")
                 filename = f"{today_date}_{index}.{file_extension}"
                 file_path = os.path.join("cache", filename)
 
                 with open(file_path, "wb") as file:
                     file.write(response.content)
 
-                print(f"Downloaded file as {filename} to cache")
+                log.info(f"Downloaded file as {filename} to cache")
             else:
-                print(f"Failed to download file from {url}")
+                log.error(f"Failed to download file from {url}")
+
+    def clear_cache(self) -> None:
+        if not os.path.exists("cache"):
+            os.makedirs("cache")
+
+        else:
+            for file_name in os.listdir("cache"):
+                file_path = os.path.join("cache", file_name)
+                try:
+                    if os.path.isfile(file_path):
+                        os.unlink(file_path)
+                except Exception as e:
+                    log.error(f"Failed to delete {file_path}. Reason: {e}")

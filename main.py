@@ -5,18 +5,19 @@ from WebCollector import WebCollector
 from DiscordHandler import DiscordHandler
 from MediaDownloader import MediaDownloader
 
-log.basicConfig(level=log.INFO, format='[%(levelname)s] %(name)s: %(message)s')
+log.basicConfig(level=log.INFO, format="[%(levelname)s] %(name)s: %(message)s")
 
 
 async def main() -> None:
-    # urls = WebCollector().all()
+    urls = WebCollector().all()
 
-    # print(urls)
-
-    # MediaDownloader(urls).download()
+    MediaDownloader(urls).download()
 
     discord = DiscordHandler()
     await discord.run()
+
+    MediaDownloader(urls).clear_cache()
+
 
 if __name__ == "__main__":
     try:

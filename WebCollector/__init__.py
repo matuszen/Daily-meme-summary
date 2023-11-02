@@ -1,6 +1,7 @@
 import requests
 from datetime import datetime
 from bs4 import BeautifulSoup, element
+import logging as log
 
 from . import urls
 
@@ -9,6 +10,7 @@ class WebCollector:
     def __init__(self) -> None:
         self._webpages_urls = urls.WEBSITES
         self._media_urls = set()
+        self._media_count = 0
 
     def _jbzd(self) -> None:
         subpage = 1
@@ -49,13 +51,13 @@ class WebCollector:
                             and "/normal/" in image_url
                         ):
                             self._media_urls.add(image_url)
-                            print(f"Image finded: {image_url.split('/')[-1]}")
+                            self._media_count += 1
 
                     for video in videos:
                         video_url = video.get("video_url")
                         if video_url:
                             self._media_urls.add(video_url)
-                            print(f"Video finded: {video_url.split('/')[-1]}")
+                            self._media_count += 1
 
                     last_subpage = False
 
@@ -65,6 +67,10 @@ class WebCollector:
             subpage += 1
 
     def all(self) -> set[str]:
+        log.info("Start collecting memes")
+
         self._jbzd()
+
+        log.info(f"{self._media_count} memes finded")
 
         return self._media_urls
