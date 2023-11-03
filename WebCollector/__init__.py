@@ -1,7 +1,7 @@
 import requests
 import logging as log
-from datetime import datetime
 from bs4 import BeautifulSoup, element
+from datetime import datetime, timedelta
 
 from WebCollector.urls import WEBSITES
 
@@ -17,11 +17,15 @@ class WebCollector:
         last_subpage = False
         should_continue = True
 
+        today = datetime.today()
+        beginning_of_the_today = datetime(today.year, today.month, today.day, 0, 0, 0)
+        beginning_of_the_yesterday = beginning_of_the_today - timedelta(days=1)
+
         while should_continue:
             if last_subpage:
                 should_continue = False
 
-            URL = f"{self._webpages_urls['JBZD'][f'WAITING_URL']}{subpage}"
+            URL = f"{self._webpages_urls['JBZD'][f'MAIN_URL']}{subpage}"
             MEDIA_URL = self._webpages_urls["JBZD"]["MEDIA_URL"]
 
             response = requests.get(URL)
@@ -34,12 +38,11 @@ class WebCollector:
                 posted_time = article_time.get("data-date")
                 posted_datetime = datetime.strptime(posted_time, "%Y-%m-%d %H:%M:%S")
 
-                today = datetime.today()
-                beginning_of_the_day = datetime(
-                    today.year, today.month, today.day, 0, 0, 0
-                )
-
-                if posted_datetime >= beginning_of_the_day:
+                if (
+                    beginning_of_the_yesterday
+                    <= posted_datetime
+                    <= beginning_of_the_today
+                ):
                     images: list[element.Tag] = article.find_all("img")
                     videos: list[element.Tag] = article.find_all("videoplyr")
 

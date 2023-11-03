@@ -44,7 +44,7 @@ class DiscordHandler:
 
     async def _send(self) -> None:
         directory = os.path.join(
-            os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1]), "cache"
+            os.sep.join(os.path.abspath(__file__).split(os.sep)[:-2]), "cache"
         )
 
         files = [os.path.join(directory, file) for file in os.listdir(directory)]
