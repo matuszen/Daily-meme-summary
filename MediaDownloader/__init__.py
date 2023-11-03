@@ -1,7 +1,7 @@
 import os
 import requests
-from datetime import datetime
 import logging as log
+from datetime import datetime
 
 
 class MediaDownloader:
@@ -15,12 +15,13 @@ class MediaDownloader:
         if os.listdir("cache") is not None:
             self.clear_cache()
 
+        today_date = datetime.now().strftime("%d-%m-%Y")
+
         for index, url in enumerate(self._urls, 1):
             response = requests.get(url)
 
             if response.status_code == 200:
                 file_extension = url.split(".")[-1]
-                today_date = datetime.now().strftime("%d-%m-%Y")
                 filename = f"{today_date}_{index}.{file_extension}"
                 file_path = os.path.join("cache", filename)
 

@@ -1,8 +1,9 @@
-import discord
-from discord.ext import commands
 import os
+import discord
 import logging as log
-from dc_token import TOKEN, CHANNEL_ID
+from discord.ext import commands
+
+from DiscordHandler.dc_token import TOKEN, CHANNEL_ID
 
 
 class DiscordHandler:
@@ -42,14 +43,9 @@ class DiscordHandler:
         await self._bot.start(TOKEN)
 
     async def _send(self) -> None:
-        if os.name == "nt":
-            directory = os.path.join(
-                "\\".join(os.path.abspath(__file__).split("\\")[:-1]), "cache"
-            )
-        else:
-            directory = os.path.join(
-                "/".join(os.path.abspath(__file__).split("/")[:-1]), "cache"
-            )
+        directory = os.path.join(
+            os.sep.join(os.path.abspath(__file__).split(os.sep)[:-1]), "cache"
+        )
 
         files = [os.path.join(directory, file) for file in os.listdir(directory)]
 
@@ -58,7 +54,7 @@ class DiscordHandler:
         for file in files:
             try:
                 with open(file, "rb") as file:
-                    await self._channel.send(discord.File(file))
+                    await self._channel.send(file=discord.File(file))
                     memes_count += 1
 
             except discord.HTTPException as e:

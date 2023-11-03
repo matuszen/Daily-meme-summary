@@ -1,14 +1,14 @@
 import requests
+import logging as log
 from datetime import datetime
 from bs4 import BeautifulSoup, element
-import logging as log
 
-from . import urls
+from WebCollector.urls import WEBSITES
 
 
 class WebCollector:
     def __init__(self) -> None:
-        self._webpages_urls = urls.WEBSITES
+        self._webpages_urls = WEBSITES
         self._media_urls = set()
         self._media_count = 0
 
@@ -21,7 +21,7 @@ class WebCollector:
             if last_subpage:
                 should_continue = False
 
-            URL = f"{self._webpages_urls['JBZD'][f'MAIN_URL']}{subpage}"
+            URL = f"{self._webpages_urls['JBZD'][f'WAITING_URL']}{subpage}"
             MEDIA_URL = self._webpages_urls["JBZD"]["MEDIA_URL"]
 
             response = requests.get(URL)
@@ -72,5 +72,8 @@ class WebCollector:
         self._jbzd()
 
         log.info(f"{self._media_count} memes finded")
+
+        if self._media_count == 0:
+            exit()
 
         return self._media_urls
